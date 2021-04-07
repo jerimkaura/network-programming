@@ -1,6 +1,7 @@
 ### UDP CHAT
 
 #### Changes
+
 - Connectionless 
 - We user port number and IP address
 - We use bind function to bind the nodes with their IP-addresses
