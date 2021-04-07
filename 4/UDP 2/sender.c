@@ -37,15 +37,15 @@ int  main (){
         printf("%s", sender_message);
         // fgets(sender_message, strlen(sender_message), stdin);
 
-        //send the message tothe receiver
+        //send the message to the receiver
         sendto(sender_descriptor, sender_message, strlen(sender_message), 0, (struct sockaddr*)&server_address, sizeof(server_address));
 
         //terminate chat session upon sending "end"
-        if(strcmp(sender_message, "end")==0){
+        if(strcmp(sender_message, "end")==0){/*ain'nt working yet*/
             break;
         }
 
-        // Receive response from receiver
+        // Receive the response from receiver
         int size = sizeof(server_address);
         int len = recvfrom(sender_descriptor, sender_message, sizeof(receiver_message), 0, (struct sockaddr*)&server_address, &size);
         sender_message[len] = '\0';
@@ -55,7 +55,7 @@ int  main (){
             break;
         }
 
-        //output message received
+        //output the message received
         printf("Message received : %s\n", sender_message);
     }
     
@@ -63,6 +63,3 @@ int  main (){
     close(sender_descriptor);
 <<<<<<< HEAD
 }
-=======
-}
->>>>>>> 507a2ca700e78292fbb180db47c9c24abe739b5f
