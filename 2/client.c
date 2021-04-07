@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <arpa/inet.h>
 
 void error(const char* msg){
     perror(msg);
@@ -34,8 +35,15 @@ void chat(int clientfeed){
     
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char **argv){
     int sockfeed, n;
+    char *ip = "127.0.0.1";
+    int port;
+    if(argc<2){
+        port = 9200;
+    }else{
+        port = atoi(argv[1]);
+    }
     struct sockaddr_in client_addr;
     struct hostent *server;
     char buffer[512];
@@ -44,7 +52,7 @@ int main(int argc, char *argv[]){
     if(sockfeed<0){
         error("Error opening the socket");
     }
-    server = gethostbyname(argv[1]);
+    server = gethostbyname("localhost");
     if (server == NULL)
     {
         fprintf(stderr, "Error, no server\n");
@@ -52,7 +60,7 @@ int main(int argc, char *argv[]){
     }
     client_addr.sin_family = AF_INET;
     bcopy((char *)server->h_addr, (char *) &client_addr.sin_addr.s_addr, server->h_length);
-    client_addr.sin_port = htons(9050);
+    client_addr.sin_port = htons(port);
     if(connect(sockfeed, (struct sockaddr *) &client_addr, sizeof(client_addr))<0){
         error("Error connecting");
     }

@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 void error(const char *msg){
     perror(msg);
@@ -35,9 +36,16 @@ void chat(int sockfeed){
     }
 }
 
-int main(){
+int main(int argc, char **argv){
     // Create the socket
     int server_sock, newsocket_conn;
+    char *ip = "127.0.0.1";
+    int port;
+    if(argc<2){
+        port = 9200;
+    }else{
+        port = atoi(argv[1]);
+    }
     socklen_t client;
     server_sock = socket(AF_INET, SOCK_STREAM, 0);
     if(server_sock<0){
@@ -47,8 +55,8 @@ int main(){
     // Define the address
     struct sockaddr_in server_address, client_addr;
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(9050);
-    server_address.sin_addr.s_addr = INADDR_ANY;
+    server_address.sin_port = htons(port);
+    server_address.sin_addr.s_addr = inet_addr(ip);
 
     // Bind the server
     if(bind(server_sock, (struct sockaddr *) &server_address, sizeof(server_address))<0){
