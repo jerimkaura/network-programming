@@ -68,4 +68,8 @@ int  main (){
     
     //close the secket on receiver side
     close(receiver_descriptor);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 507a2ca700e78292fbb180db47c9c24abe739b5f
