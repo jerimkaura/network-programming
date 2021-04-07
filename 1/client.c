@@ -37,7 +37,7 @@ int main() {
     recv(network_socket, &server_response, sizeof(server_response), 0);
 
     // print out the server's response
-    printf("The server sent the data: %s\n", server_response);
+    printf("Client received: %s\n", server_response);
 
     // close the socket
     close(network_socket);

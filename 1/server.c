@@ -44,6 +44,7 @@ int main() {
 
     // send data to the client
     send(client_socket, server_message, sizeof(server_message), 6);
+    printf("Server sent: %s\n", server_message);
     
     // close the socket
     close(client_socket);
