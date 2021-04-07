@@ -1,53 +1,71 @@
-#include <stdio.h>
+#include<stdio.h>
+#include<string.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<sys/socket.h>
+#include<netinet/in.h>
+#include<netinet/ip.h>
+#include<arpa/inet.h>
+#include<unistd.h>
 
-int main(){
-    //socket creation
-    int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if(fd == -1){
-        perror("Socket error from sender side");
+int  main (){
+    system("clear");
+    //Create a socket that returns a socket descriptor
+    int receiver_descriptor = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (receiver_descriptor < 0){
+        perror("Socket creation error");
         exit(0);
     }
 
-    struct sockaddr_in server, client;
-    server.sin_family = AF_INET;
-    server.sin_port = htons(5000); //senders port address
-    server.sin_addr.s_addr = inet_addr("127.0.0.1"); // sender ip address
+    struct sockaddr_in server_address, client_address;
 
-    int b = bind(fd, (struct sockaddr*) &server, sizeof(struct sockaddr));
-    if (b==-1){
-        perror("Bind error from server side");
+    // Set port and IP:
+    server_address.sin_family = AF_INET;
+
+    //port 
+    server_address.sin_port = htons(5000);
+
+    //ip address
+    server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    // Bind to the set port and IP:
+    if(bind(receiver_descriptor, (struct sockaddr*)&server_address, sizeof(server_address)) < 0){
+        printf("Couldn't bind to the port\n");
         exit(0);
     }
 
-    client.sin_family = AF_INET;
-    client.sin_port = htons(6000); //receiver por address
-    client.sin_addr.s_addr = inet_addr("127.0.0.1");
+    //messages placeholder arrays
+    char sender_message[2000], receiver_message[2000];
+    while(1){
+        int size = sizeof(server_address);
+
+        // receive message from sender
+        int len = recvfrom(receiver_descriptor, receiver_message, sizeof(receiver_message), 0, (struct sockaddr*)&client_address, &size);
+        receiver_message[len] = '\0';
+
+        //terminate chat session upon receiving "end"
+        if(strcmp(receiver_message, "end")==0){
+            break;
+        }
+
+        //output the message
+        printf("Message received : %s\n", receiver_message);
+
+        // Get input from the user:
+        printf("Enter message: ");
+        fgets(sender_message, 2000, stdin);
+        //scanf("%s", sender_message);
+
+        //send respose to sender
+        sendto(receiver_descriptor, sender_message, strlen(sender_message), 0, (struct sockaddr*)&client_address, sizeof(client_address));
+        
+        //terminate chat session upon sending "end"
+        if(strcmp(receiver_message[0], "end")==0){
+            break;
+        }
+    }
     
-    char str[200];
-    printf("Enter message to send to receiver: ");
-    fgets(str, 200, stdin);
-
-    //send the message to receiver
-    sendto(fd,str, strlen(str), 0, (struct sockaddr*)&client, sizeof(client));
-
-    char strs[200]= "gb7ig87oenhrf8oeywhirf";
-    int size = sizeof(struct sockaddr);
-
-    //receive response from receiver
-    int k = recvfrom(fd,strs, strlen(strs), 0, (struct sockaddr*)&client, &size);
-    strs[k] = '\0';
-
-    printf("Message received from receiver is: %s\n", strs);
-
-    //closing the socket
-    close(fd);
-
+    //close the secket on receiver side
+    close(receiver_descriptor);
 }
