@@ -30,7 +30,7 @@ int  main (){
     sender_address.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     // Bind to the set port and IP:
-    if(bind(receiver_descriptor, (struct sockaddr*)&sender_address, sizeof(server_address)) < 0){
+    if(bind(receiver_descriptor, (struct sockaddr*)&sender_address, sizeof(sender_address)) < 0){
         printf("Couldn't bind to the port\n");
         exit(0);
     }
@@ -38,7 +38,7 @@ int  main (){
     //messages placeholder arrays
     char sender_message[2000], receiver_message[2000];
     while(1){
-        int size = sizeof(server_address);
+        int size = sizeof(sender_address);
 
         // receive message from sender
         int len = recvfrom(receiver_descriptor, receiver_message, sizeof(receiver_message), 0, (struct sockaddr*)&receiver_address, &size);
