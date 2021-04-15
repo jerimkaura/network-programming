@@ -7,6 +7,9 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#define MAX_CUR 100
+#define MAX_ACC 10
+#define MAX_TEXT 1000
 
 void error(const char* msg){
     perror(msg);
@@ -14,22 +17,27 @@ void error(const char* msg){
 }
 
 void chat(int clientfeed){
-    int buffsize = 512, n;
-    char buffer[buffsize];
+    int n;
+    char buffer[MAX_TEXT];
     while (1)
     {
-        bzero(buffer, sizeof(buffer));
-        printf("Enter msg: ");
-        n=0;
-        while ((buffer[n++]=getchar())!='\n');
-        write(clientfeed, buffer, sizeof(buffer));
         bzero(buffer,sizeof(buffer));
         read(clientfeed,buffer,sizeof(buffer));
-        printf("Server msg: %s", buffer);
+        printf("Server: %s", buffer);
+        
+        bzero(buffer, sizeof(buffer));
+        printf(">> ");
+        n=0;
+        char ch;
+        while ((ch=getchar())!='\n'){
+            buffer[n++] = ch;
+        }
+        write(clientfeed, buffer, sizeof(buffer));
         if(strncmp("exit",buffer, 4) == 0){
             printf("Client Closed\n");
             break;
         }
+        
         
     }
     
@@ -46,7 +54,7 @@ int main(int argc, char **argv){
     }
     struct sockaddr_in client_addr;
     struct hostent *server;
-    char buffer[512];
+    char buffer[MAX_TEXT];
     
     sockfeed = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfeed<0){
@@ -64,6 +72,8 @@ int main(int argc, char **argv){
     if(connect(sockfeed, (struct sockaddr *) &client_addr, sizeof(client_addr))<0){
         error("Error connecting");
     }
+    
+
     chat(sockfeed);
     close(sockfeed);
     return 0;
