@@ -49,8 +49,8 @@ int main(int argc,char *argv[]) {
 	}
 
     fd_set current_sockets; // file descriptor sets (bitset)
-    for (int i = 0; i < 10; i++) 
-		clients[i] = 0;
+    for (int i = 0; i < 10; i++)
+        clients[i] = 0;
 
 	while (true) {
         FD_ZERO(&current_sockets); // clear fd set
