@@ -1,4 +1,4 @@
-### CONCURRENT CONNECTIoN ORIENTED SERVER
+### CONCURRENT CONNECTION ORIENTED SERVER
 - Compile the server `gcc server.c -pthread -o server`
 - Run the server code by  `./server portnumber`
 - Compile the cleint by th command `gcc -pthread client.c -o client`
