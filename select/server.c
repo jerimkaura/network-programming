@@ -87,22 +87,22 @@ int main(int argc,char *argv[]) {
             for (int i = 0; i < 10; i++) {
                 int sfd = clients[i];
                 if (FD_ISSET(sfd, &current_sockets)) {
-                        char msg[500];
-                        int len = recv(sfd, msg, 500, 0);
-                        if (len == 0) {
-                            close(sfd);
-                            clients[i] = 0;
-                        } else {
-                            msg[len] = '\0';
-                            for (int j = 0; j < 10; j++) {
-                                if (clients[j] != 0 && clients[j] != sfd) {
-                                    if (send(clients[j], msg, strlen(msg),0) < 0) {
-                                        perror("sending failure");
-                                        continue;
-                                    }
+                    char msg[500];
+                    int len = recv(sfd, msg, 500, 0);
+                    if (len == 0) {
+                        close(sfd);
+                        clients[i] = 0;
+                    } else {
+                        msg[len] = '\0';
+                        for (int j = 0; j < 10; j++) {
+                            if (clients[j] != 0 && clients[j] != sfd) {
+                                if (send(clients[j], msg, strlen(msg),0) < 0) {
+                                    perror("sending failure");
+                                    continue;
                                 }
                             }
                         }
+                    }
                 }
             }
         }
