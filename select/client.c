@@ -25,6 +25,7 @@ void *recvmg(void *sock)
 		memset(msg,'\0',sizeof(msg)); 
 	}
 }
+
 int main(int argc, char *argv[])
 {
 	struct sockaddr_in socket_addr;
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
 	inet_ntop(AF_INET, (struct sockaddr *)&socket_addr, ip, INET_ADDRSTRLEN);
 	printf("connected to %s, start chatting\n",ip);
 
-    // craeting the thread to receive the message
+    // creating the thread to receive the message
 	pthread_create(&receive_thread,NULL,recvmg,&my_socket);
 
 	while(fgets(msg,500,stdin) > 0) { // get input from the client
