@@ -51,7 +51,7 @@ int main(){
 		if( (childpid = fork()) == 0 ){
 			// create new process using fork
 			printf("%s\n", "Child created for dealing with the request");
-			close(server_socket);//not sure this is what is to be closed
+			close(server_socket);
 			
 			while ( (n = recv(client_socket, buffer, 4096, 0)) > 0){
 				printf("%s", "String received from the client: ");
