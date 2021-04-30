@@ -11,12 +11,12 @@
 #define MAX_ACC 10
 #define MAX_TEXT 1000
 
-void error(const char* msg){
+void error(const char* msg) {
     perror(msg);
     exit(0);
 }
 
-void chat(int clientfeed){
+void chat(int clientfeed) {
     int n;
     char buffer[MAX_TEXT];
     while (1)
@@ -37,10 +37,7 @@ void chat(int clientfeed){
             printf("Client Closed\n");
             break;
         }
-        
-        
     }
-    
 }
 
 int main(int argc, char **argv){
@@ -73,11 +70,7 @@ int main(int argc, char **argv){
         error("Error connecting");
     }
     
-
     chat(sockfeed);
     close(sockfeed);
-    return 0;
-    
-
     return 0;
 }
