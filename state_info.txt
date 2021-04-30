@@ -1,8 +1,0 @@
-/* sample how the stateinformation table would look like*/
-/*append is used to append info in the table*/
-Client connection details:- 
-Client socket number:- 1 
-Client port number:- 8080 
-Client ip address:- 127.0.0.1 
-
-
