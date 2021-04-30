@@ -1,4 +1,4 @@
-# Networking assigments
+# Networking assignments
 
 ## Chat App
 
