@@ -9,7 +9,8 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
-int clients[10]; // hold sockets to all clients
+// hold sockets to all clients
+int clients[10];
 
 int main(int argc, char *argv[]) {
     struct sockaddr_in my_addr, their_addr;
@@ -48,28 +49,32 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    fd_set current_sockets; // file descriptor sets (bitset)
+    fd_set current_sockets; // file descriptor set (bitset)
     for (int i = 0; i < 10; i++)
         clients[i] = 0;
 
     while (true) {
         FD_ZERO(&current_sockets); // clear fd set
-        FD_SET(my_sock, &current_sockets);
-        int maxfd = my_sock;
+        FD_SET(my_sock, &current_sockets); // add server's socket to fd set
+        int maxfd = my_sock; // find the maximum socket fd for use in select function
 
         for (int i = 0; i < 10; i++) {
-            if (clients[i] > 0)
-                FD_SET(clients[i], &current_sockets);
-            if (clients[i] > maxfd)
+            if (clients[i] > 0) // has a valid socket
+                FD_SET(clients[i], &current_sockets); // add socket to fd set
+            if (clients[i] > maxfd) // finding maximum socket fd
                 maxfd = clients[i];
         }
 
+        // select returns the number of ready socket fds
         if (select(maxfd + 1, &current_sockets, NULL, NULL, NULL) < 1) {
             perror("select error");
             exit(EXIT_FAILURE);
         }
 
-        if (FD_ISSET(my_sock, &current_sockets)) { // new connection
+        // check if my_sock (server's socket) has any activity
+        // if it does, it means we have a new connection
+        if (FD_ISSET(my_sock, &current_sockets)) {
+            // accept new connection
             if ((their_sock = accept(my_sock, (struct sockaddr *)&their_addr, &their_addr_size)) < 0) {
                 perror("accept unsuccessful");
                 exit(1);
@@ -77,6 +82,7 @@ int main(int argc, char *argv[]) {
             inet_ntop(AF_INET, (struct sockaddr *)&their_addr, ip, INET_ADDRSTRLEN);
             printf("%s connected\n", ip);
 
+            // save the new connection's socket fd to clients
             for (int j = 0; j < 10; j++) {
                 if (clients[j] == 0) {
                     clients[j] = their_sock;
@@ -84,17 +90,21 @@ int main(int argc, char *argv[]) {
                 }
             }
         } else {
+            // process send messages (if any)
             for (int i = 0; i < 10; i++) {
                 int sfd = clients[i];
-                if (FD_ISSET(sfd, &current_sockets)) {
+                if (FD_ISSET(sfd, &current_sockets)) { // check if ready
                     char msg[500];
-                    int len = recv(sfd, msg, 500, 0);
+                    int len = recv(sfd, msg, 500, 0); // receive message
                     if (len == 0) {
-                        close(sfd);
+                        // if ready and has no message to send, it means that
+                        // the connection has been terminated by the client
+                        close(sfd); // close the connection
                         clients[i] = 0;
                     } else {
-                        msg[len] = '\0';
+                        msg[len] = '\0'; // null terminate message
                         for (int j = 0; j < 10; j++) {
+                            // send the message to all clients apart from the sender
                             if (clients[j] != 0 && clients[j] != sfd) {
                                 if (send(clients[j], msg, strlen(msg), 0) < 0) {
                                     perror("sending failure");
@@ -107,5 +117,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+
     return 0;
 }

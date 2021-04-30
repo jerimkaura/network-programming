@@ -8,19 +8,19 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
-//Receiving a message
+// Receiving a message
 void *recvmg(void *sock) {
   int socket_fd = *((int *)sock);
   char msg[500];
   int len;
-  //receive unitl end of message
+  // receive until end of message
   while ((len = recv(socket_fd, msg, 500, 0)) > 0) {
     msg[len] = '\0';
 
-    //print received message
+    // print received message
     fputs(msg, stdout);
 
-    //clear the message buffer
+    // clear the message buffer
     memset(msg, '\0', sizeof(msg));
   }
 }
@@ -44,8 +44,8 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  portno = atoi(argv[2]);                      //get the port number from argv[2]
-  strcpy(username, argv[1]);                   //copy name from argv[1] into the username variable
+  portno = atoi(argv[2]);                      // get the port number from argv[2]
+  strcpy(username, argv[1]);                   // copy name from argv[1] into the username variable
   my_socket = socket(AF_INET, SOCK_STREAM, 0); // create the socket
   memset(socket_addr.sin_zero, '\0', sizeof(socket_addr.sin_zero));
 
