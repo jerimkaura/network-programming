@@ -13,7 +13,7 @@ void write_file(int sockfd){
 	fp = fopen(filename, "w");
 	printf("Client Sent \n");
 	while (1) {
-		//receive the data from the client and store in te buffer
+		// receive the data from the client and store in te buffer
 		n = recv(sockfd, buffer, SIZE, 0);
 		if (n <= 0){
 			break;
@@ -21,48 +21,48 @@ void write_file(int sockfd){
 		}
 		printf("%s",buffer);
 
-		//save the data to the file specified
+		// save the data to the file specified
 		fprintf(fp, "%s", buffer);
-		bzero(buffer, SIZE);//empty the buffer 
+		bzero(buffer, SIZE); // empty the buffer 
 	}
-	return;
+	fclose(fp);
 }
 
 int main(){
 	char *ip = "127.0.0.1"; // ip adsress
-	int port = 8080; //port number
-	int conn; //connection variable
+	int port = 8080; // port number
+	int conn; // connection variable
 
 	int sockfd, new_sock;
 	struct sockaddr_in server_addr, new_addr;
 	socklen_t addr_size;
 	char buffer[SIZE];
 
-	//create the socket
+	// create the socket
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if(sockfd < 0) {
+	if (sockfd < 0) {
 		perror("Error in socket");
 		exit(1);
 	}
 	printf("Server socket created successfully.\n");
 
-	//specify the port and address
+	// specify the port and address
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = port;
 	server_addr.sin_addr.s_addr = inet_addr(ip);
 
-	//bind the socket to the server address
+	// bind the socket to the server address
 	conn = bind(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
-	if(conn < 0) {
+	if (conn < 0) {
 		perror("Error in bind");
 		exit(1);
 	}
 	printf("Binding successfull.\n");
 
 	// listen for connection request from the clients
-	if(listen(sockfd, 10) == 0){
+	if (listen(sockfd, 10) == 0){
 		printf("Listening....\n");
-	}else{
+	} else {
 		perror("Error in listening");
 		exit(1);
 	}
