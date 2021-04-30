@@ -1,4 +1,6 @@
-# Chat App
+# Networking assigments
+
+## Chat App
 
 Chatting model: Group chat
 
