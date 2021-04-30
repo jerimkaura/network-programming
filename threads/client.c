@@ -8,25 +8,23 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
-//Receiving a message
+// receiving a message
 void *recvmg(void *sock)
 {
 	int socket_fd = *((int *)sock);
 	char msg[500];
 	int len;
-    //receive unitl end of message
+    // receive until end of message
 	while((len = recv(socket_fd,msg,500,0)) > 0) {
 		msg[len] = '\0';
-
-        //print received message
-		fputs(msg,stdout);
-
-        //clear the message buffer
+        // print received message
+		fputs(msg, stdout);
+        // clear the message buffer
 		memset(msg,'\0',sizeof(msg)); 
 	}
 }
-int main(int argc, char *argv[])
-{
+
+int main(int argc, char *argv[]) {
 	struct sockaddr_in socket_addr;
 	int my_socket;
 	int socket_fd;
@@ -39,13 +37,13 @@ int main(int argc, char *argv[])
 	char ip[INET_ADDRSTRLEN];
 	int len;
 
-    //chekc argument count.
+    // check argument count.
 	if(argc > 3) {
 		printf("too many arguments");
 		exit(1);
 	}
-	portno = atoi(argv[2]); //get the port number from argv[2]
-	strcpy(username,argv[1]); //copy name from argv[1] into the username variable
+	portno = atoi(argv[2]); // get the port number from argv[2]
+	strcpy(username,argv[1]); // copy name from argv[1] into the username variable
 	my_socket = socket(AF_INET,SOCK_STREAM,0); // create the socket
 	memset(socket_addr.sin_zero,'\0',sizeof(socket_addr.sin_zero));
 
@@ -72,10 +70,12 @@ int main(int argc, char *argv[])
 			perror("message not sent");
 			exit(1);
 		}
-		memset(msg,'\0',sizeof(msg));// clear msg
-		memset(res,'\0',sizeof(res));// clear res
+		memset(msg,'\0',sizeof(msg)); // clear msg
+		memset(res,'\0',sizeof(res)); // clear res
 	}
-	pthread_join(receive_thread,NULL);
+
+	pthread_join(receive_thread, NULL);
 	close(my_socket);
 
+	return 0;
 }

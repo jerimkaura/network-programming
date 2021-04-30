@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
             // process send messages (if any)
             for (int i = 0; i < 10; i++) {
                 int sfd = clients[i];
-                if (FD_ISSET(sfd, &current_sockets)) { // check if ready
+                if (FD_ISSET(sfd, &current_sockets)) { // check if the client is ready
                     char msg[500];
                     int len = recv(sfd, msg, 500, 0); // receive message
                     if (len == 0) {

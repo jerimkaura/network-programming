@@ -8,7 +8,7 @@
 
 Note: The client must provide the same port that the server is running on
 
-# Chat App Model
+### Chat App Model
 
 Chatting model: Group chat
 
