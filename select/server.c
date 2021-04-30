@@ -9,6 +9,12 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
+/*
+    Group chat using Asynchronous I/O - Select
+    Compile the server `gcc server.c -o server`
+    Run as `./server serverportnumber` (port numbers should be greater than 1024 to avoid permission denied errors)
+*/
+
 // hold sockets to all clients
 int clients[10];
 
@@ -27,7 +33,7 @@ int main(int argc, char *argv[]) {
         printf("too many arguments");
         exit(1);
     }
-    portno = atoi(argv[1]);
+    portno = atoi(argv[1]); // use port number provided in the terminal
 
     // create socket
     my_sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -43,7 +49,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    // listen for connections from clients
+    // listen for connections from up to 10 clients
     if (listen(my_sock, 10) != 0) {
         perror("listening unsuccessful");
         exit(1);
@@ -51,7 +57,7 @@ int main(int argc, char *argv[]) {
 
     fd_set current_sockets; // file descriptor set (bitset)
     for (int i = 0; i < 10; i++)
-        clients[i] = 0;
+        clients[i] = 0; // set all clients to 0 (we haven't received any clients yet)
 
     while (true) {
         FD_ZERO(&current_sockets); // clear fd set
@@ -79,6 +85,7 @@ int main(int argc, char *argv[]) {
                 perror("accept unsuccessful");
                 exit(1);
             }
+            // extract the client's address
             inet_ntop(AF_INET, (struct sockaddr *)&their_addr, ip, INET_ADDRSTRLEN);
             printf("%s connected\n", ip);
 

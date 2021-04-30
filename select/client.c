@@ -8,6 +8,13 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
+/*
+  A threaded group chat client (separate threads for receiving and sending messages)
+  This is the same client as that one provided under the threads folder
+  Compile the client by the command `gcc -pthread client.c -o client`
+  Run as `./client username serverportnumber` (port numbers should be greater than 1024 to avoid permission denied errors)
+*/
+
 // Receiving a message
 void *recvmg(void *sock) {
   int socket_fd = *((int *)sock);
