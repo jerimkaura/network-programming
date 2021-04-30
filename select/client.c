@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  portno = atoi(argv[2]);                      // get the port number from argv[2]
-  strcpy(username, argv[1]);                   // copy name from argv[1] into the username variable
+  portno = atoi(argv[2]); // get the port number from argv[2]
+  strcpy(username, argv[1]); // copy name from argv[1] into the username variable
   my_socket = socket(AF_INET, SOCK_STREAM, 0); // create the socket
   memset(socket_addr.sin_zero, '\0', sizeof(socket_addr.sin_zero));
 
@@ -84,4 +84,6 @@ int main(int argc, char *argv[]) {
   }
   pthread_join(receive_thread, NULL);
   close(my_socket);
+
+  return 0;
 }
