@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #define SIZE 1024
 
-//send file function
+// send file function
 void send_file(FILE *fp, int sockfd){
 	int n;
 	char data[SIZE] = {0};
